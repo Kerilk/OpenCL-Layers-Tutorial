@@ -1,0 +1,145 @@
+\documentclass{beamer}
+\usepackage{etex}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amssymb}
+%\usepackage{epsfig,shadow}
+\usepackage{verbatim}
+%\usepackage{pstricks}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+%\usepackage{comment}
+%\usepackage{algorithm}
+\usepackage{listings}
+\usepackage{figlatex}
+%\usepackage{algorithmic}
+
+\beamertemplatetransparentcovereddynamic
+
+%\setbeamertemplate{background canvas}[vertical shading][bottom=red!10,top=blue!10]
+%\usetheme{Warsaw}
+
+%\usetheme{Darmstadt}
+
+
+\lstdefinestyle{CStyle}{
+        language=C,
+        backgroundcolor=\color{white},
+        commentstyle=\color{gray},
+        keywordstyle=\color{magenta},
+        numberstyle=\tiny\color{gray},
+        stringstyle=\color{purple},
+        basicstyle=\tiny,
+        morekeywords={cl_uint,cl_platform_id,cl_device_id,cl_context_properties,cl_context,cl_program,cl_kernel,cl_command_queue,cl_mem,size_t},
+        breakatwhitespace=false,
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=5pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        tabsize=2
+}
+
+\lstdefinestyle{CPPStyle}{
+        language=C++,
+        backgroundcolor=\color{white},
+        commentstyle=\color{gray},
+        keywordstyle=\color{magenta},
+        numberstyle=\tiny\color{gray},
+        stringstyle=\color{purple},
+        basicstyle=\tiny,
+        breakatwhitespace=false,
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=5pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        tabsize=2
+}
+
+\lstdefinestyle{PythonStyle}{
+        language=Python,
+        backgroundcolor=\color{white},
+        commentstyle=\color{gray},
+        keywordstyle=\color{magenta},
+        numberstyle=\tiny\color{gray},
+        stringstyle=\color{purple},
+        basicstyle=\tiny,
+        breakatwhitespace=false,
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=5pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        tabsize=2
+}
+
+\lstdefinestyle{OpenCLStyle}{
+        language=C,
+        backgroundcolor=\color{white},
+        commentstyle=\color{gray},
+        keywordstyle=\color{magenta},
+        numberstyle=\tiny\color{gray},
+        stringstyle=\color{purple},
+        basicstyle=\tiny,
+        morekeywords={__private,__local,__global,__constant,__kernel,__read_only,__write_only,__read_write},
+        breakatwhitespace=false,
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=5pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        tabsize=2
+}
+
+\lstdefinestyle{CUDAStyle}{
+        language=C++,
+        backgroundcolor=\color{white},
+        commentstyle=\color{gray},
+        keywordstyle=\color{magenta},
+        numberstyle=\tiny\color{gray},
+        stringstyle=\color{purple},
+        basicstyle=\tiny,
+        morekeywords={__global__,__restrict__,__shared__,__local__},
+        breakatwhitespace=false,
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=5pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        tabsize=2
+}
+\usecolortheme{progressbar}
+\usefonttheme{progressbar}
+\useoutertheme{progressbar}
+\useinnertheme{progressbar}
+
+\title{Layers for OpenCL}
+\author{Brice Videau (Argonne National Laboratory)}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Introduction}
+
+\frame{
+  \frametitle{Introduction}
+}
+\end{document}
