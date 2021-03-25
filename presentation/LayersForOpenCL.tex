@@ -1,5 +1,4 @@
 \documentclass{beamer}
-\usepackage{etex}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
@@ -151,7 +150,7 @@ modified
     \item Use the dynamic linker to \textit{preload} this library.
   \end{itemize}
   \begin{center}
-  \includegraphics{interception}
+  \includegraphics[width=0.8\textwidth]{interception}
   \end{center}
   Famous Example: \textbf{Intel}'s
   \href{https://github.com/intel/opencl-intercept-layer}{\color{blue}
@@ -205,7 +204,7 @@ modified
   The OpenCL ICD loader is a router for OpenCL calls, directing them to the
 correct vendor driver:
   \begin{center}
-  \includegraphics{ICD_Loader}
+  \includegraphics[width=0.8\textwidth]{ICD_Loader}
   \end{center}
 }
 
@@ -258,18 +257,59 @@ cl_int clGetDeviceInfo(cl_device_id device,
 
 \frame{
   \frametitle{OpenCL ICD Loader with Layers API Call Workflow}
-  With layer support enabled, the OpenCL ICD loader will first redirect calls to
-  the different active layers, then directs the call to the correct vendor
-  driver:
+  With layer support enabled, the OpenCL ICD loader will:
+  \begin{itemize}
+  \item first redirect calls to the different active layers,
+  \item then dispatch the call to the correct vendor driver.
+  \end{itemize}
   \begin{center}
-  \includegraphics{ICD_Loader_Layers}
+  \includegraphics[width=0.8\textwidth]{ICD_Loader_Layers}
   \end{center}
 }
 
-\subsection[Implementation]{OpenCL ICD Loader Layers Implementation}
+\subsection[Implementation]{Loader Layers Implementation}
 
 \frame{
-  \frametitle{OpenCL ICD Loader Layers Implementation}
+  \frametitle{Loader Layers Implementation Idea}
+  How can this scheme be implemented?
+  \begin{block}{Constraints:}
+    \begin{itemize}
+    \item No undue overhead when Layers are not used,
+    \item Chain as many layers as required,
+    \item Layers should be easy to write and understand.
+    \end{itemize}
+  \end{block}
+  \begin{block}{Idea (layer side):}
+    \begin{itemize}
+    \item Layers will be given a complete dispatch table to call into,
+    \item Any OpenCL call a layer will make will have to be through this table,
+    \item Layers will provide a (potentially incomplete) dispatch table of the
+          functions they implement to the loader.
+    \end{itemize}
+  \end{block}
+}
+
+\frame{
+  \frametitle{Layers Implementation Idea Continued}
+  \begin{block}{Idea (loader side):}
+    \begin{itemize}
+    \item The loader will maintain a list of successfully loaded layers,
+    \item Each new layer is added to the front of the list,
+    \item Each layer is passed the previous layer dispatch table as a target, or
+          the loader internal dispatch table if it is the first,
+    \item Incomplete layer tables are completed with their target entries.
+    \end{itemize}
+  \end{block}
+}
+
+\frame{
+  \frametitle{Loader Layers Implementation Illustration}
+  \begin{figure}
+  \centering
+  \includegraphics<1>{ICD_Loader_Layer_Loading}%
+  \includegraphics<2>{ICD_Loader_Layer_Loading2}%
+  \includegraphics<3>{ICD_Loader_Layer_Loading3}%
+  \end{figure}
 }
 
 \section{Layer Usage and Development}
