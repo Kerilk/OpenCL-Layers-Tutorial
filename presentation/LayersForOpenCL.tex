@@ -312,23 +312,89 @@ cl_int clGetDeviceInfo(cl_device_id device,
   \end{figure}
 }
 
-\section{Layer Usage and Development}
+\begin{frame}[fragile]
+  \frametitle{Original OpenCL Loader API Dispatch Example}
+  The OpenCL ICD Loader's job is now to:
+  \begin{itemize}
+    \item check \textit{if} there are layers, and \textit{then} forward to the
+          first layer,
+    \item \textit{else}, check for \textit{NULL} handle and call the correct
+          function in the dispatch table.
+  \end{itemize}
+  \lstset{style=CStyle}
+  \begin{lstlisting}
+cl_int clGetDeviceInfo(cl_device_id device,
+   cl_device_info param_name, size_t param_value_size,
+   void* param_value, size_t* param_value_size_ret)
+{
+  if (khrFirstLayer)
+    return khrFirstLayer->dispatch.clGetDeviceInfo(
+      device, param_name, param_value_size,
+      param_value, param_value_size_ret);
+  if (!device) return CL_INVALID_DEVICE;
+  return device->dispatch->clGetDeviceInfo(device,
+    param_name, param_value_size,
+    param_value, param_value_size_ret);
+}
+\end{lstlisting}
+The cost of layers when there is no active layer is 1 pointer check.
+\end{frame}
+
+\section{Layer Development and Usage}
+
+\frame{
+  \frametitle{Layer Development and Usage}
+}
+
+\subsection[Layer API]{OpenCL Layers Plugin API}
+
+\frame{
+  \frametitle{OpenCL Layer Plugin}
+  \begin{itemize}
+    \item An OpenCL layer plugin is a shared library,
+    \item It must export 2 function symbols:
+    \begin{itemize}
+      \item \texttt{clGetLayerInfo}
+      \item \texttt{clInitLayer}
+    \end{itemize}
+    \item \textbf{\texttt{clGetLayerInfo}} is used to query information about
+          the layer, for now it is limited to the version of the layer API that
+          is supported,
+    \item \textbf{\texttt{clInitLayer}} is used to negotiate between the loader
+          and the layer and exchange dispatch tables. Especially, if the loader
+          dispatch table is too small, the layer can refuse to initialize.
+    \item The formal extension is called \textit{cl\_loader\_layers}
+  \end{itemize}
+}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{clGetLayerInfo} API}
+  \lstset{style=CStyle}
+  \begin{lstlisting}
+cl_int clGetLayerInfo(cl_layer_info  param_name,
+                      size_t         param_value_size,
+                      void          *param_value,
+                      size_t        *param_value_size_ret);
+\end{lstlisting}
+\end{frame}
+
 \subsection[configuration]{OpenCL ICD Loader Layers Configuration Options}
 
 \frame{
   \frametitle{OpenCL ICD Loader Layers Configuration Options}
 }
 
-\subsection[Layer API]{OpenCL Layers Plugin API}
-
-\frame{
-  \frametitle{OpenCL Layers Plugin API}
-}
-
 \section[Conclusion]{Conclusion and Perspectives}
 
 \frame{
   \frametitle{Conclusion and Perspectives}
+}
+
+\frame{
+  \frametitle{Acknowledgement}
+  This research used resources of the Argonne Leadership Computing Facility,
+  which is a DOE Office of Science User Facility supported under Contract
+  DE-AC02-06CH11357.
 }
 
 \end{document}
