@@ -6,72 +6,10 @@
 \usepackage{verbatim}
 \usepackage{beamerthemesplit}
 \usepackage{graphicx}
-\usepackage{listings}
 \usepackage{figlatex}
+\usepackage{minted}
 
 \beamertemplatetransparentcovereddynamic
-
-\lstdefinestyle{CStyle}{
-        language=C,
-        backgroundcolor=\color{white},
-        commentstyle=\color{gray},
-        keywordstyle=\color{magenta},
-        numberstyle=\tiny\color{gray},
-        stringstyle=\color{purple},
-        basicstyle=\tiny,
-        morekeywords={cl_uint,cl_platform_id,cl_device_id,cl_context_properties,cl_context,cl_program,cl_kernel,cl_command_queue,cl_mem,size_t},
-        breakatwhitespace=false,
-        breaklines=true,
-        captionpos=b,
-        keepspaces=true,
-        numbers=left,
-        numbersep=5pt,
-        showspaces=false,
-        showstringspaces=false,
-        showtabs=false,
-        tabsize=2
-}
-
-\lstdefinestyle{CPPStyle}{
-        language=C++,
-        backgroundcolor=\color{white},
-        commentstyle=\color{gray},
-        keywordstyle=\color{magenta},
-        numberstyle=\tiny\color{gray},
-        stringstyle=\color{purple},
-        basicstyle=\tiny,
-        breakatwhitespace=false,
-        breaklines=true,
-        captionpos=b,
-        keepspaces=true,
-        numbers=left,
-        numbersep=5pt,
-        showspaces=false,
-        showstringspaces=false,
-        showtabs=false,
-        tabsize=2
-}
-
-\lstdefinestyle{OpenCLStyle}{
-        language=C,
-        backgroundcolor=\color{white},
-        commentstyle=\color{gray},
-        keywordstyle=\color{magenta},
-        numberstyle=\tiny\color{gray},
-        stringstyle=\color{purple},
-        basicstyle=\tiny,
-        morekeywords={__private,__local,__global,__constant,__kernel,__read_only,__write_only,__read_write},
-        breakatwhitespace=false,
-        breaklines=true,
-        captionpos=b,
-        keepspaces=true,
-        numbers=left,
-        numbersep=5pt,
-        showspaces=false,
-        showstringspaces=false,
-        showtabs=false,
-        tabsize=2
-}
 
 \usecolortheme{progressbar}
 \usefonttheme{progressbar}
@@ -212,8 +150,8 @@ correct vendor driver:
   \frametitle{In the Beginning Was the Dispatch Table...}
   In order to support several implementations simultaneously, OpenCL Object are
   required to conform to this definition:
-  \lstset{style=CStyle}
-  \begin{lstlisting}
+  \tiny
+  \begin{minted}[linenos]{c}
 /* Dispatch table providing pointers to vendor
  * implementation of the OpenCL API
  */
@@ -227,7 +165,8 @@ typedef struct _cl_icd_dispatch {
 }
 struct _cl_device_id { cl_icd_dispatch *dispatch; };
 typedef struct _cl_device_id *cl_device_id;
-\end{lstlisting}
+\end{minted}
+  \normalsize
   Objects carry around references (function pointers) to the functions (API
   entry points) that need to be used with those objects.
 \end{frame}
@@ -239,8 +178,8 @@ typedef struct _cl_device_id *cl_device_id;
     \item check for \textit{NULL} handle,
     \item call the correct function in the dispatch table.
   \end{itemize}
-  \lstset{style=CStyle}
-  \begin{lstlisting}
+  \tiny
+  \begin{minted}[linenos]{c}
 cl_int clGetDeviceInfo(cl_device_id device,
    cl_device_info param_name, size_t param_value_size,
    void* param_value, size_t* param_value_size_ret)
@@ -250,7 +189,7 @@ cl_int clGetDeviceInfo(cl_device_id device,
     param_name, param_value_size,
     param_value, param_value_size_ret);
 }
-  \end{lstlisting}
+\end{minted}
 \end{frame}
 
 \subsection[Layer API Call]{OpenCL ICD Loader with Layers API Call Workflow}
@@ -321,8 +260,8 @@ cl_int clGetDeviceInfo(cl_device_id device,
     \item \textit{else}, check for \textit{NULL} handle and call the correct
           function in the dispatch table.
   \end{itemize}
-  \lstset{style=CStyle}
-  \begin{lstlisting}
+  \tiny
+  \begin{minted}[linenos]{c}
 cl_int clGetDeviceInfo(cl_device_id device,
    cl_device_info param_name, size_t param_value_size,
    void* param_value, size_t* param_value_size_ret)
@@ -336,7 +275,8 @@ cl_int clGetDeviceInfo(cl_device_id device,
     param_name, param_value_size,
     param_value, param_value_size_ret);
 }
-\end{lstlisting}
+\end{minted}
+\normalsize
 The cost of layers when there is no active layer is 1 pointer check.
 \end{frame}
 
@@ -363,20 +303,90 @@ The cost of layers when there is no active layer is 1 pointer check.
     \item \textbf{\texttt{clInitLayer}} is used to negotiate between the loader
           and the layer and exchange dispatch tables. Especially, if the loader
           dispatch table is too small, the layer can refuse to initialize.
-    \item The formal extension is called \textit{cl\_loader\_layers}
+    \item The formal extension is called \texttt{cl\_loader\_layers} and can be
+          found here: \color{blue}
+  \underline{\href{https://github.com/KhronosGroup/OpenCL-Docs/blob/master/ext/cl_loader_layers.asciidoc}{cl\_loader\_layers.asciidoc}}
   \end{itemize}
 }
 
 \begin{frame}[fragile]
   \frametitle{\texttt{clGetLayerInfo} API}
-  \lstset{style=CStyle}
-  \begin{lstlisting}
+\tiny
+  \begin{minted}[linenos]{c}
+typedef cl_uint cl_layer_info;
+typedef cl_uint cl_layer_api_version;
+#define CL_LAYER_API_VERSION        0x4240
+#define CL_LAYER_API_VERSION_100 100
 cl_int clGetLayerInfo(cl_layer_info  param_name,
                       size_t         param_value_size,
                       void          *param_value,
                       size_t        *param_value_size_ret);
-\end{lstlisting}
+\end{minted}
+\begin{itemize}
+\scriptsize
+\item \texttt{param\_name}: Name of the requested parameter (e.g. \texttt{CL\_LAYER\_API\_VERSION})
+\item \texttt{param\_value\_size}: Size in bytes of memory pointed to by \texttt{param\_value}
+\item \texttt{param\_value}: Pointer to the variable where the info should be stored
+\item \texttt{param\_value\_size\_ret}: Optional pointer to a variable to query the info size
+\end{itemize}
+\scriptsize
+\texttt{Returns}:
+\begin{itemize}
+\scriptsize
+\item \texttt{CL\_SUCCESS} on success
+\item \texttt{CL\_INVALID\_VALUE} if \texttt{param\_name} is not one of the supported values or if size in bytes specified by \texttt{param\_value\_size} is \texttt{<} size of return type and \texttt{param\_value} is not a NULL value.
+\end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{\texttt{clGetLayerInfo} API Implementation}
+\tiny
+\inputminted[linenos,firstline=8,lastline=31]{c}{example_layer.c}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{clInitLayer} API}
+\tiny
+  \begin{minted}[linenos]{c}
+cl_int clInitLayer(cl_uint                 num_entries,
+                   const cl_icd_dispatch  *target_dispatch,
+                   cl_uint                *num_entries_ret,
+                   const cl_icd_dispatch **layer_dispatch_ret);
+\end{minted}
+\begin{itemize}
+\scriptsize
+\item \texttt{num\_entries}: number of entries in the dispatch table provided by the loader
+\item \texttt{target\_dispatch}: pointer to the dispatch table, provided by the loader, that the layer must redirect it’s call to
+\item \texttt{num\_entries\_ret}: address to store the number of entries in the layer dispatch table
+\item \texttt{layer\_dispatch\_ret}: address to store the pointer to the layer dispatch table
+\end{itemize}
+\scriptsize
+\texttt{Returns}:
+\begin{itemize}
+\scriptsize
+\item \texttt{CL\_SUCCESS} on success
+\item \texttt{CL\_INVALID\_VALUE} if \texttt{num\_entries} is insufficient for the layer or if \texttt{target\_dispatch} is a \texttt{NULL} value, or \texttt{num\_entries\_ret} is a \texttt{NULL} value, or \texttt{layer\_dispatch\_ret} is a \texttt{NULL} value.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{\texttt{clInitLayer} API Implementation}
+\tiny
+\inputminted[linenos,firstline=33,lastline=53]{c}{example_layer.c}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{simple wrapper}
+Display parameters and results of \texttt{clGetPlatformIDs}. Initialize the layer dispatch table.
+\tiny
+\inputminted[linenos,firstline=55]{c}{example_layer.c}
+\normalsize
+This covers the bare minimum code required to create a layer.
+\end{frame}
+
+\begin{frame}[fragile]
+\end{frame}
+
 
 \subsection[configuration]{OpenCL ICD Loader Layers Configuration Options}
 
