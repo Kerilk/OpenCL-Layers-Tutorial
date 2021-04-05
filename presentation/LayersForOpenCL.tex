@@ -1,25 +1,35 @@
-\documentclass{beamer}
+\documentclass[
+    ignorenonframetext,
+  ]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usetheme[]{Warsaw}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{amssymb}
 \usepackage{verbatim}
-\usepackage{beamerthemesplit}
+\usepackage{./style/beamercolorthemeprogressbar}
+\usepackage{./style/beamerfontthemeprogressbar}
+\usepackage{./style/beamerouterthemeprogressbar}
+\usepackage{./style/beamerinnerthemeprogressbar}
+\setbeamertemplate{navigation symbols}{}
+\beamertemplatetransparentcovereddynamic
 \usepackage{graphicx}
 \usepackage{figlatex}
 \usepackage{minted}
 
-\beamertemplatetransparentcovereddynamic
-
-\usecolortheme{progressbar}
-\usefonttheme{progressbar}
-\useoutertheme{progressbar}
-\useinnertheme{progressbar}
-
 \graphicspath{{figures/}}
 
 \title{Layers for OpenCL}
-\author{Brice Videau (Argonne National Laboratory)}
+\author{Brice Videau}
+\date{27th April 2021}
+\institute{Argonne National Laboratory}
+
 
 \begin{document}
 
@@ -509,8 +519,7 @@ Number of platforms                               1
       \item Handle validation, parameter validation, object lifetime, ...
     \end{itemize}
     \item Tracing/debugging,
-    \item Compatibility,
-    \item ...
+    \item Compatibility...
   \end{itemize}
   \end{block}
   \begin{block}{Evolve Layer Specification}
