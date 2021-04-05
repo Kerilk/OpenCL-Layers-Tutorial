@@ -57,7 +57,7 @@ static CL_API_ENTRY cl_int CL_API_CALL clGetPlatformIDs_wrap(
     cl_uint num_entries,
     cl_platform_id* platforms,
     cl_uint* num_platforms) {
-  fprintf(stderr, "clGetPlatformIDs(%d, %p, %p)\n",
+  fprintf(stderr, "clGetPlatformIDs(num_entries: %d, platforms: %p, num_platforms: %p)\n",
           num_entries, platforms, num_platforms);
   cl_int res = tdispatch->clGetPlatformIDs(num_entries, platforms, num_platforms);
   fprintf(stderr, "clGetPlatformIDs result: %d", res);

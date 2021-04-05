@@ -31,8 +31,8 @@
 
 \frame{
   \frametitle{Application Complexity}
-  \begin{columns}
-    \column{5.5cm}
+%  \begin{columns}
+%    \column{5.5cm}
     \begin{block}{More Complex Environment}
       \begin{itemize}
       \item Hardware is becoming increasingly heterogeneous,
@@ -41,17 +41,17 @@
       \item Sometimes difficult to understand and debug these applications.
       \end{itemize}
     \end{block}
-    \column{5.5cm}
-    \begin{block}{Libraries are a Window into Applications}
+%    \column{5.5cm}
+    \begin{block}{Libraries are Windows into Applications}
       \begin{itemize}
       \item Applications rely on libraries as bridge to the hardware,
       \item Libraries present consistent \textit{Application Programming
             Interfaces} APIs,
       \item Library APIs define \textit{programming models},
-      \item Programming Model usage can be \textit{validated}
+      \item Programming Model usage can be \textit{validated}.
       \end{itemize}
     \end{block}
-  \end{columns}
+%  \end{columns}
 }
 
 \frame{
@@ -80,7 +80,7 @@
 
 \frame{
   \frametitle{Library Interception}
-  For shared library, \textit{interception} (or interposition) is usually used.
+  For shared libraries, \textit{interception} (or interposition) is usually used.
   \begin{itemize}
     \item Create a shared library that implements functions to be traced or
 modified
@@ -133,6 +133,19 @@ modified
   \begin{center}
   How does the OpenCL \textit{Installable Client Driver} (ICD) Loader work?
   \end{center}
+}
+
+\frame{
+  \frametitle{What is the OpenCL ICD Loader?}
+  The OpenCL Installable Client Driver Loader (ICD-Loader) is the library
+  that:
+  \begin{itemize}
+    \item Allows using several OpenCL driver from different vendors through the
+          same interface,
+    \item Takes care of loading and verifying those drivers (they should implement \texttt{cl\_khr\_icd}),
+    \item Offers options for users to load specific drivers,
+    \item Is named \texttt{libOpenCL}, with a suffix that depends on the platform (\texttt{.so}, \texttt{.dll}, \texttt{.dylib}, ...).
+  \end{itemize}
 }
 
 \subsection[API Call]{Original OpenCL ICD Loader API Call Workflow}
@@ -302,7 +315,9 @@ The cost of layers when there is no active layer is 1 pointer check.
           is supported,
     \item \textbf{\texttt{clInitLayer}} is used to negotiate between the loader
           and the layer and exchange dispatch tables. Especially, if the loader
-          dispatch table is too small, the layer can refuse to initialize.
+          dispatch table is too small, the layer can refuse to initialize. This
+          function can use the provided dispatch table to make calls to OpenCL if
+          it needs to do so.
     \item The formal extension is called \texttt{cl\_loader\_layers} and can be
           found here: \color{blue}
   \underline{\href{https://github.com/KhronosGroup/OpenCL-Docs/blob/master/ext/cl_loader_layers.asciidoc}{cl\_loader\_layers.asciidoc}}
@@ -385,19 +400,134 @@ This covers the bare minimum code required to create a layer.
 \end{frame}
 
 \begin{frame}[fragile]
-\end{frame}
+\frametitle{Building an OpenCL Layer}
 
+\begin{itemize}
+\item An OpenCL Layer is a shared library that will be opened as a plugin.
+\item on Linux it can be as simple as:
+\end{itemize}
+\tiny
+\begin{minted}{sh}
+gcc -shared -fPIC -Wall example_layer.c -I/path/to/OpenCL-Headers/ -o libExampleLayer.so
+\end{minted}
+\normalsize
+\begin{columns}
+\column{6.5cm}
+\begin{itemize}
+\item Portable solution using CMake:
+\end{itemize}
+\tiny
+\inputminted[linenos]{cmake}{CMakeLists.txt}
+\normalsize
+\column{3.45cm}
+\begin{itemize}
+\item example\_layer.def
+\end{itemize}
+\tiny
+\inputminted[linenos]{c}{example_layer.def}
+\end{columns}
+
+\end{frame}
 
 \subsection[configuration]{OpenCL ICD Loader Layers Configuration Options}
 
 \frame{
   \frametitle{OpenCL ICD Loader Layers Configuration Options}
+  How can Layers be loaded?
+  \begin{itemize}
+  \item For now through \texttt{OPENCL\_LAYERS} environment variable,
+  \item Accepts a list of colon (Unixes) or semi-colon (Windows) separated layers,
+  \item Depending on system configuration, you may need to provide a full path,
+  \item Layers are loaded in order, and added in front of the layer chain,
+        so the first listed layer will be the last to be called.
+  \end{itemize}
 }
+
+\begin{frame}[fragile]
+  \frametitle{OpenCL ICD Loader Layers Usage Example}
+\begin{itemize}
+\item Simple instance with the example layer previously defined and an even simpler
+      layer that print functions called:
+\end{itemize}
+\tiny
+\begin{minted}{sh}
+OPENCL_LAYERS=libExampleLayer.so:libPrintLayer.so clinfo
+\end{minted}
+\normalsize
+\begin{itemize}
+\item Excerpt from output:
+\end{itemize}
+\tiny
+\begin{minted}{sh}
+clGetPlatformIDs
+clGetPlatformIDs(num_entries: 0, platforms: (nil), num_platforms: 0x7ffd4bc7d140)
+clGetPlatformIDs result: 0, *num_platforms: 1
+Number of platforms                               1
+clGetPlatformIDs
+clGetPlatformIDs(num_entries: 1, platforms: 0x5597e98ab4d0, num_platforms: (nil))
+clGetPlatformIDs result: 0
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Name                                   Intel(R) OpenCL HD Graphics
+\end{minted}
+\normalsize
+\begin{itemize}
+\item Reference:
+\end{itemize}
+\tiny
+\begin{minted}{sh}
+Number of platforms                               1
+  Platform Name                                   Intel(R) OpenCL HD Graphics
+\end{minted}
+\end{frame}
 
 \section[Conclusion]{Conclusion and Perspectives}
 
 \frame{
   \frametitle{Conclusion and Perspectives}
+}
+
+\frame{
+  \frametitle{Conclusion}
+  \begin{block}{Simple Experimental Layers for OpenCL}
+  \begin{itemize}
+  \item Experimental implementation provides support for interception and modification,
+  \item Multiple Layers supported,
+  \item Simple API for implementing and configuring,
+  \item Layers should be portable between platforms (recompilation needed).
+  \end{itemize}
+  \end{block}
+}
+
+\frame{
+  \frametitle{Perspectives}
+  \begin{block}{Develop Layers for OpenCL}
+  \begin{itemize}
+    \item Validation:
+    \begin{itemize}
+      \item Akin to Vulkan's validation layers,
+      \item Handle validation, parameter validation, object lifetime, ...
+    \end{itemize}
+    \item Tracing/debugging,
+    \item Compatibility,
+    \item ...
+  \end{itemize}
+  \end{block}
+  \begin{block}{Evolve Layer Specification}
+  \begin{itemize}
+    \item Feedback from layer development and community,
+    \item Enrich layer API,
+    \item System-wide configuration options for layers,
+    \item Programmatically controlled layers (in-application)?
+  \end{itemize}
+  \end{block}
+}
+
+\frame{
+  \frametitle{Questions}
+  \LARGE
+  \centering
+  \textbf{Questions?}
 }
 
 \frame{

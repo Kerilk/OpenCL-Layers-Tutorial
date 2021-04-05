@@ -1,12 +1,10 @@
 cmake_minimum_required (VERSION 3.1)
-
 project (example_layer VERSION 1.0)
 set (CMAKE_C_STANDARD 99)
 set (CMAKE_C_STANDARD_REQUIRED ON)
 option (OPENCL_HEADER_PATH "Path to OpenCL Headers" OFF)
 
-set (EXAMPLE_LAYER_SOURCES
-     example_layer.c)
+set (EXAMPLE_LAYER_SOURCES example_layer.c)
 if (WIN32)
     list (APPEND EXAMPLE_LAYER_SOURCES example_layer.def)
 endif ()
@@ -14,4 +12,4 @@ endif ()
 if (OPENCL_HEADER_PATH)
     include_directories (${OPENCL_HEADER_PATH})
 endif ()
-add_library (example_layer MODULE ${EXAMPLE_LAYER_SOURCES})
+add_library (ExampleLayer MODULE ${EXAMPLE_LAYER_SOURCES})
