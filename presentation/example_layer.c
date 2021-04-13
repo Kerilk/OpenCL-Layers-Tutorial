@@ -12,8 +12,6 @@ CL_API_ENTRY cl_int CL_API_CALL clGetLayerInfo(
     size_t         param_value_size,
     void          *param_value,
     size_t        *param_value_size_ret) {
-  if (param_value_size && !param_value)
-    return CL_INVALID_VALUE;
   switch (param_name) {
   case CL_LAYER_API_VERSION:
     if (param_value) {

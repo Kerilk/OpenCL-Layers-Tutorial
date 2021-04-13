@@ -83,7 +83,7 @@
   \end{itemize}
   \end{block}
   \textbf{Can these goals be achieved outside the application?}\\
-  \textbf{Can we modify, the behavior of the programming model?}
+  \textbf{Can we modify the behavior of the programming model?}
 }
 
 \subsection[Instrumentation]{Instrumentation: Layers vs Interception}
@@ -366,7 +366,7 @@ cl_int clGetLayerInfo(cl_layer_info  param_name,
 \begin{frame}[fragile]
 \frametitle{\texttt{clGetLayerInfo} API Implementation}
 \tiny
-\inputminted[linenos,firstline=8,lastline=31]{c}{example_layer.c}
+\inputminted[linenos,firstline=8,lastline=29]{c}{example_layer.c}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -397,14 +397,14 @@ cl_int clInitLayer(cl_uint                 num_entries,
 \begin{frame}[fragile]
 \frametitle{\texttt{clInitLayer} API Implementation}
 \tiny
-\inputminted[linenos,firstline=33,lastline=53]{c}{example_layer.c}
+\inputminted[linenos,firstline=31,lastline=51]{c}{example_layer.c}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{simple wrapper}
+\frametitle{Simple Wrapper}
 Display parameters and results of \texttt{clGetPlatformIDs}. Initialize the layer dispatch table.
 \tiny
-\inputminted[linenos,firstline=55]{c}{example_layer.c}
+\inputminted[linenos,firstline=53]{c}{example_layer.c}
 \normalsize
 This covers the bare minimum code required to create a layer.
 \end{frame}
