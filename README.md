@@ -130,6 +130,64 @@ clGetPlatformIDs result: 0
   Platform Profile                                FULL_PROFILE
 ```
 
+We can also combine both layers:
+
+```sh
+OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so" $CLINFO_DIR/clinfo
+```
+
+This yields:
+```
+clGetPlatformIDs(num_entries: 0, platforms: (nil), num_platforms: 0x7ffebcf7a860)
+clGetPlatformIDs
+clGetPlatformIDs result: 0, *num_platforms: 1
+Number of platforms                               1
+clGetPlatformIDs(num_entries: 1, platforms: 0x55aa6855b4d0, num_platforms: (nil))
+clGetPlatformIDs
+clGetPlatformIDs result: 0
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Name                                   Intel(R) OpenCL HD Graphics
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Vendor                                 Intel(R) Corporation
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Version                                OpenCL 3.0 
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Profile                                FULL_PROFILE
+```
+As we can see the simple prin layer is called between the entry and the exit of the example layer.
+We can reverse this order by changing the order of the layers on the command line:
+
+```sh
+OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
+```
+
+As we can witness, the result changes as expected:
+```
+clGetPlatformIDs
+clGetPlatformIDs(num_entries: 0, platforms: (nil), num_platforms: 0x7ffd078e4910)
+clGetPlatformIDs result: 0, *num_platforms: 1
+Number of platforms                               1
+clGetPlatformIDs
+clGetPlatformIDs(num_entries: 1, platforms: 0x556fda8dc4d0, num_platforms: (nil))
+clGetPlatformIDs result: 0
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Name                                   Intel(R) OpenCL HD Graphics
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Vendor                                 Intel(R) Corporation
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Version                                OpenCL 3.0 
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Profile                                FULL_PROFILE
+```
+
 #### Example Layers
 
 ```sh
