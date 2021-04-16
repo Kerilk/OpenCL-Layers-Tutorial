@@ -42,8 +42,8 @@ ln -sf $OPENCL_HEADERS_DIR/CL inc
 mkdir -p build && cd build
 cmake ..
 cmake --build .
-export LIBRARY_PATH="$OPENCL_ICD_LOADER_DIR/build":$LIBRARY_PATH
-export LD_LIBRARY_PATH="$OPENCL_ICD_LOADER_DIR/build":$LD_LIBRARY_PATH
+export LIBRARY_PATH=$OPENCL_ICD_LOADER_DIR/build:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$OPENCL_ICD_LOADER_DIR/build:$LD_LIBRARY_PATH
 ```
 
 #### Building clinfo
@@ -75,4 +75,37 @@ Number of platforms                               1
                                                   cl_khr_global_int32_base_atomics                                 0x400000 (1.0.0)
                                                   cl_khr_global_int32_extended_atomics                             0x400000 (1.0.0)
 
+```
+
+We can test layer support using the test layer provided with the ICD loader:
+```sh
+OPENCL_LAYERS=$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so $CLINFO_DIR/clinfo
+```
+
+The output of `clinfo` should be changed:
+```
+clGetPlatformIDs
+Number of platforms                               1
+clGetPlatformIDs
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Name                                   Intel(R) OpenCL HD Graphics
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Vendor                                 Intel(R) Corporation
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Version                                OpenCL 3.0 
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Profile                                FULL_PROFILE
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Extensions                             cl_khr_byte_addressable_store cl_khr_fp16 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_icd cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_intel_command_queue_families cl_intel_subgroups cl_intel_required_subgroup_size cl_intel_subgroups_short cl_khr_spir cl_intel_accelerator cl_intel_driver_diagnostics cl_khr_priority_hints cl_khr_throttle_hints cl_khr_create_command_queue cl_intel_subgroups_char cl_intel_subgroups_long cl_khr_il_program cl_intel_mem_force_host_memory cl_khr_subgroup_extended_types cl_khr_subgroup_non_uniform_vote cl_khr_subgroup_ballot cl_khr_subgroup_non_uniform_arithmetic cl_khr_subgroup_shuffle cl_khr_subgroup_shuffle_relative cl_khr_subgroup_clustered_reduce cl_khr_subgroups cl_intel_spirv_device_side_avc_motion_estimation cl_intel_spirv_media_block_io cl_intel_spirv_subgroups cl_khr_spirv_no_integer_wrap_decoration cl_intel_unified_shared_memory_preview cl_khr_mipmap_image cl_khr_mipmap_image_writes cl_intel_planar_yuv cl_intel_packed_yuv cl_intel_motion_estimation cl_intel_device_side_avc_motion_estimation cl_intel_advanced_motion_estimation cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_image2d_from_buffer cl_khr_depth_images cl_khr_3d_image_writes cl_intel_media_block_io cl_intel_va_api_media_sharing cl_intel_subgroup_local_block_io 
+clGetPlatformInfo
+clGetPlatformInfo
+  Platform Extensions with Version                cl_khr_byte_addressable_store                                    0x400000 (1.0.0)
+                                                  cl_khr_fp16                                                      0x400000 (1.0.0)
+                                                  cl_khr_global_int32_base_atomics                                 0x400000 (1.0.0)
+                                                  cl_khr_global_int32_extended_atomics                             0x400000 (1.0.0)
 ```
