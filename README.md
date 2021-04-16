@@ -48,6 +48,7 @@ export LD_LIBRARY_PATH=$OPENCL_ICD_LOADER_DIR/build:$LD_LIBRARY_PATH
 
 #### Building clinfo
 
+An up-to-date `clinfo` is better, so we will be building it also:
 ```sh
 cd $CL_LAYERS_TUT_BASE
 git clone https://github.com/Oblomov/clinfo.got
@@ -59,7 +60,7 @@ make
 #### Testing the Loader and clinfo
 
 ```sh
-./clinfo
+$CLINFO_DIR/clinfo
 ```
 
 If you have a recent Intel GPU and OpenCL driver, it should output:
