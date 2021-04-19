@@ -218,3 +218,36 @@ OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.
 ```
 OpenCL objects leaks:
 ```
+
+#### Real Life Example: mixbench-opencl
+
+While working on the tutorial I found a handle leak in the `mixbench` application, that os now fixed.
+Nonetheless the leak can still be observed in older version of the repository:
+```sh
+cd $CL_LAYERS_TUT_BASE
+git clone https://github.com/ekondis/mixbench.git
+export MIXBENCH_DIR=$CL_LAYERS_TUT_BASE/mixbench
+cd $MIXBENCH_DIR/mixbench-opencl
+git checkout 514c7577f139871266d9535583bd78a6878af47e
+mkdir -p build && cd build
+cmake ..
+cmake --build .
+OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so ./mixbench-ocl-ro
+```
+Should yield:
+```
+OpenCL objects leaks:
+CONTEXT (0x56103bacf2f0) reference count: 1
+COMMAND_QUEUE (0x56103bcaa890) reference count: 1
+```
+
+Whereas using the latest version:
+```sh
+git checkout master
+cmake --build .
+OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so ./mixbench-ocl-ro
+```
+Should yield no leaked handles:
+```
+OpenCL objects leaks:
+```
