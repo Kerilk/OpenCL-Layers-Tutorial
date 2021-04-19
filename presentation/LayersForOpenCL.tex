@@ -366,7 +366,7 @@ cl_int clGetLayerInfo(cl_layer_info  param_name,
 \begin{frame}[fragile]
 \frametitle{\texttt{clGetLayerInfo} API Implementation}
 \tiny
-\inputminted[linenos,firstline=8,lastline=29]{c}{example_layer.c}
+\inputminted[linenos,firstline=8,lastline=29]{c}{../example_layer/example_layer.c}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -397,14 +397,14 @@ cl_int clInitLayer(cl_uint                 num_entries,
 \begin{frame}[fragile]
 \frametitle{\texttt{clInitLayer} API Implementation}
 \tiny
-\inputminted[linenos,firstline=31,lastline=51]{c}{example_layer.c}
+\inputminted[linenos,firstline=31,lastline=51]{c}{../example_layer/example_layer.c}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Simple Wrapper}
 Display parameters and results of \texttt{clGetPlatformIDs}. Initialize the layer dispatch table.
 \tiny
-\inputminted[linenos,firstline=53]{c}{example_layer.c}
+\inputminted[linenos,firstline=53]{c}{../example_layer/example_layer.c}
 \normalsize
 This covers the bare minimum code required to create a layer.
 \end{frame}
@@ -427,14 +427,14 @@ gcc -shared -fPIC -Wall example_layer.c -I/path/to/OpenCL-Headers/ -o libExample
 \item Portable solution using CMake:
 \end{itemize}
 \tiny
-\inputminted[linenos]{cmake}{CMakeLists.txt}
+\inputminted[linenos]{cmake}{../example_layer/CMakeLists.txt}
 \normalsize
 \column{3.45cm}
 \begin{itemize}
 \item example\_layer.def
 \end{itemize}
 \tiny
-\inputminted[linenos]{c}{example_layer.def}
+\inputminted[linenos]{c}{../example_layer/example_layer.def}
 \end{columns}
 
 \end{frame}
