@@ -191,7 +191,7 @@ clGetPlatformInfo
   Platform Profile                                FULL_PROFILE
 ```
 
-#### Example Layers
+#### More Example Layers
 
 A repository of example layers can be cloned and built:
 
