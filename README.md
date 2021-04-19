@@ -106,7 +106,7 @@ First we can build the demonstration layer fron the presentation:
 cd $CL_LAYERS_TUT_BASE
 git clone git@github.com:Kerilk/OpenCL-Layers-Tutorial.git
 export OPENCL_LAYERS_TUTORIAL_DIR=$CL_LAYERS_TUT_BASE/OpenCL-Layers-Tutorial
-cd $OPENCL_LAYERS_TUTORIAL_DIR/presentation
+cd $OPENCL_LAYERS_TUTORIAL_DIR/example_layer
 mkdir -p build && cd build
 cmake -DOPENCL_HEADER_PATH="$OPENCL_HEADERS_DIR" ..
 cmake --build .
@@ -115,7 +115,7 @@ cmake --build .
 
 This generated a `libExampleLayer.so` that we can use with clinfo:
 ```sh
-OPENCL_LAYERS=$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so $CLINFO_DIR/clinfo
+OPENCL_LAYERS=$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so $CLINFO_DIR/clinfo
 ```
 
 This time, the output is:
@@ -136,7 +136,7 @@ clGetPlatformIDs result: 0
 We can also combine both layers:
 
 ```sh
-OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
 ```
 
 This yields:
@@ -165,7 +165,7 @@ As we can see the simple prin layer is called between the entry and the exit of 
 We can reverse this order by changing the order of the layers on the command line:
 
 ```sh
-OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
 ```
 
 As we can witness, the result changes as expected:
