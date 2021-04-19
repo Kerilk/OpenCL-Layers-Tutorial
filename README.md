@@ -209,8 +209,12 @@ cmake --build .
 This provides us with three layers, one print layer that is similar to the test one from the loader,
 a layer to check OpenCL objects leaks, and a layer to add a functionality of ocl-icd into the official Khronos loader.
 
-Lets start by testing out the lifetime object check:
+Lets start by testing out the lifetime object check using `clinfo`:
 
 ```sh
 OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so $CLINFO_DIR/clinfo
+```
+`clinfo` doesn't seem to have leaks, so the last printed line should be:
+```
+OpenCL objects leaks:
 ```
