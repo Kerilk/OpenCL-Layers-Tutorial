@@ -111,6 +111,7 @@ mkdir -p build && cd build
 cmake -DOPENCL_HEADER_PATH="$OPENCL_HEADERS_DIR" ..
 cmake --build .
 ```
+#### Using the Newly Built Layer
 
 This generated a `libExampleLayer.so` that we can use with clinfo:
 ```sh
@@ -129,6 +130,8 @@ clGetPlatformIDs result: 0
   Platform Version                                OpenCL 3.0 
   Platform Profile                                FULL_PROFILE
 ```
+
+#### Combining Layers
 
 We can also combine both layers:
 
@@ -189,6 +192,8 @@ clGetPlatformInfo
 ```
 
 #### Example Layers
+
+A repository of example layers can be cloned and built:
 
 ```sh
 cd $CL_LAYERS_TUT_BASE
