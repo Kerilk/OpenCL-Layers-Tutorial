@@ -106,7 +106,7 @@ First we can build the demonstration layer fron the presentation:
 cd $CL_LAYERS_TUT_BASE
 git clone git@github.com:Kerilk/OpenCL-Layers-Tutorial.git
 export OPENCL_LAYERS_TUTORIAL_DIR=$CL_LAYERS_TUT_BASE/OpenCL-Layers-Tutorial
-cd $OPENCL_LAYERS_TUTORIAL_DIR/presentation
+cd $OPENCL_LAYERS_TUTORIAL_DIR/example_layer
 mkdir -p build && cd build
 cmake -DOPENCL_HEADER_PATH="$OPENCL_HEADERS_DIR" ..
 cmake --build .
@@ -115,7 +115,7 @@ cmake --build .
 
 This generated a `libExampleLayer.so` that we can use with clinfo:
 ```sh
-OPENCL_LAYERS=$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so $CLINFO_DIR/clinfo
+OPENCL_LAYERS=$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so $CLINFO_DIR/clinfo
 ```
 
 This time, the output is:
@@ -136,7 +136,7 @@ clGetPlatformIDs result: 0
 We can also combine both layers:
 
 ```sh
-OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
 ```
 
 This yields:
@@ -165,7 +165,7 @@ As we can see the simple prin layer is called between the entry and the exit of 
 We can reverse this order by changing the order of the layers on the command line:
 
 ```sh
-OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/presentation/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
 ```
 
 As we can witness, the result changes as expected:
@@ -204,4 +204,50 @@ ln -sf $OPENCL_HEADERS_DIR/CL inc
 mkdir -p build && cd build
 cmake ..
 cmake --build .
+```
+
+This provides us with three layers, one print layer that is similar to the test one from the loader,
+a layer to check OpenCL objects leaks, and a layer to add a functionality of ocl-icd into the official Khronos loader.
+
+Lets start by testing out the lifetime object check using `clinfo`:
+
+```sh
+OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so $CLINFO_DIR/clinfo
+```
+`clinfo` doesn't seem to have leaks, so the last printed line should be:
+```
+OpenCL objects leaks:
+```
+
+#### Real Life Example: mixbench-opencl
+
+While working on the tutorial I found a handle leak in the `mixbench` application, that os now fixed.
+Nonetheless the leak can still be observed in older version of the repository:
+```sh
+cd $CL_LAYERS_TUT_BASE
+git clone https://github.com/ekondis/mixbench.git
+export MIXBENCH_DIR=$CL_LAYERS_TUT_BASE/mixbench
+cd $MIXBENCH_DIR/mixbench-opencl
+git checkout 514c7577f139871266d9535583bd78a6878af47e
+mkdir -p build && cd build
+cmake ..
+cmake --build .
+OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so ./mixbench-ocl-ro
+```
+Should yield:
+```
+OpenCL objects leaks:
+CONTEXT (0x56103bacf2f0) reference count: 1
+COMMAND_QUEUE (0x56103bcaa890) reference count: 1
+```
+
+Whereas using the latest version:
+```sh
+git checkout master
+cmake --build .
+OPENCL_LAYERS=$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so ./mixbench-ocl-ro
+```
+Should yield no leaked handles:
+```
+OpenCL objects leaks:
 ```
