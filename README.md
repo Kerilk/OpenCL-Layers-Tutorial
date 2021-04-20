@@ -51,7 +51,7 @@ export LD_LIBRARY_PATH=$OPENCL_ICD_LOADER_DIR/build:$LD_LIBRARY_PATH
 An up-to-date `clinfo` is better, so we will be building it also:
 ```sh
 cd $CL_LAYERS_TUT_BASE
-git clone https://github.com/Oblomov/clinfo.got
+git clone https://github.com/Oblomov/clinfo.git
 export CLINFO_DIR=$CL_LAYERS_TUT_BASE/clinfo
 cd $CLINFO_DIR
 make
