@@ -154,7 +154,8 @@ modified
           same interface,
     \item Takes care of loading and verifying those drivers (they should implement \texttt{cl\_khr\_icd}),
     \item Offers options for users to load specific drivers,
-    \item Is named \texttt{libOpenCL}, with a suffix that depends on the platform (\texttt{.so}, \texttt{.dll}, \texttt{.dylib}, ...).
+    \item On Unix derivatives it is named \texttt{libOpenCL}, with a suffix that depends on the platform (\texttt{.so}, \texttt{.dylib}, ...).
+          On Windows it is named \texttt{OpenCL.dll},
   \end{itemize}
 }
 
