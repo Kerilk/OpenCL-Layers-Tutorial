@@ -30,8 +30,8 @@ cd "$CLINFO_DIR"
 make
 
 # Testing loader and clinfo
-#$CLINFO_DIR/clinfo
-#OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
+$CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
 
 # Building Layer from Toturial
 cd "$CL_LAYERS_TUT_BASE"
@@ -44,9 +44,9 @@ cmake -DOPENCL_HEADER_PATH="$OPENCL_HEADERS_DIR" ..
 cmake --build .
 
 # Run clinfo with the newly built layer
-#OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
-#OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
-#OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so":"$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_LAYERS_TUTORIAL_DIR/example_layer/build/libExampleLayer.so":"$OPENCL_ICD_LOADER_DIR/build/test/layer/libPrintLayer.so" $CLINFO_DIR/clinfo
 
 # Building Examples Layers
 cd "$CL_LAYERS_TUT_BASE"
@@ -60,7 +60,7 @@ cmake ..
 cmake --build .
 
 # Running the memory leak checker against clinfo
-#OPENCL_LAYERS="$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so" $CLINFO_DIR/clinfo
+OPENCL_LAYERS="$OPENCL_LAYERS_DIR/build/object-lifetime/libCLObjectLifetimeLayer.so" $CLINFO_DIR/clinfo
 
 # Real life example
 cd "$CL_LAYERS_TUT_BASE"
