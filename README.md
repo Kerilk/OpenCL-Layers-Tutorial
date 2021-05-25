@@ -4,6 +4,8 @@
 
 Presentation: [LayersForOpenCL.pdf](https://github.com/Kerilk/OpenCL-Layers-Tutorial/blob/main/presentation/LayersForOpenCL.pdf)
 
+Video: [IWOCL 2021](https://youtu.be/QUKhspUEh00)
+
 ## Demonstration
 
 ### Prerequisites
